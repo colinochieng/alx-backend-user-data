@@ -50,15 +50,25 @@ class RedactingFormatter(logging.Formatter):
     def __init__(self, fields: List[str]) -> None:
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
+        self.messages_list = []
+        self.format_join = self.SEPARATOR + ' '
 
     def format(self, record: logging.LogRecord) -> str:
         '''
         desc: function to format a record
         return: a formatted string
         '''
-        record.msg = filter_datum(self.fields, self.REDACTION,
-                                  record.getMessage(), self.SEPARATOR)
-        return super().format(record)
+        messages = super(RedactingFormatter, self).format(record)\
+            .split(self.SEPARATOR)
+        self.messages_list.extend(self.hash_messages(messages))
+        return self.format_join.join(self.messages_list)
+
+    def hash_messages(self, messages) -> List[str]:
+        '''
+        desc: function to hash PII strings
+        '''
+        return [filter_datum(self.fields, self.REDACTION, info, self.SEPARATOR)
+                for info in messages]
 
 
 def get_logger() -> logging.Logger:
