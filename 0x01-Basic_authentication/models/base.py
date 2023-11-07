@@ -16,7 +16,7 @@ class Base():
     """ Base class
     """
 
-    def __init__(self, *args: list, **kwargs: dict):
+    def __init__(self, *args: list, **kwargs: dict) -> None:
         """ Initialize a Base instance
         """
         s_class = str(self.__class__.__name__)
@@ -58,7 +58,7 @@ class Base():
         return result
 
     @classmethod
-    def load_from_file(cls):
+    def load_from_file(cls) -> None:
         """ Load all objects from file
         """
         s_class = cls.__name__
@@ -126,12 +126,13 @@ class Base():
         """ Search all objects with matching attributes
         """
         s_class = cls.__name__
-        def _search(obj):
+
+        def _search(obj) -> bool:
             if len(attributes) == 0:
                 return True
             for k, v in attributes.items():
                 if (getattr(obj, k) != v):
                     return False
             return True
-        
+
         return list(filter(_search, DATA[s_class].values()))
