@@ -112,16 +112,16 @@ class BasicAuth(Auth):
         """
         retrives user based on flask-request authentification info
         """
-        if (auth := self.authorization_header(request)) is None:
+        auth = self.authorization_header(request)
+        if auth is None:
             return None
-        elif (
-            (auth_str := self.extract_base64_authorization_header(str(auth)))
-            is None
-        ):
+
+        auth_str = self.extract_base64_authorization_header(str(auth))
+        if auth_str is None:
             return None
-        elif (
-            decoded_auth := self.decode_base64_authorization_header(auth_str)
-        ) is None:
+
+        decoded_auth = self.decode_base64_authorization_header(auth_str)
+        if decoded_auth is None:
             return None
 
         user_credentials = self.extract_user_credentials(decoded_auth)
