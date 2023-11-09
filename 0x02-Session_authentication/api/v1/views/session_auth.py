@@ -49,7 +49,7 @@ def session_login() -> str:
 
 
 @app_views.route("/auth_session/logout",
-        strict_slashes=False, methods=["DELETE"])
+                 strict_slashes=False, methods=["DELETE"])
 def session_logout() -> str:
     """
     desc: deletes users current session
