@@ -3,15 +3,17 @@
 Module housing routes for user Session Authentication
 """
 from api.v1.views import app_views
-from flask import request, jsonify, abort, Response
+from flask import request, jsonify, abort
 from os import getenv
 from models.user import User
 
 
 @app_views.route("/auth_session/login", methods=["POST"], strict_slashes=False)
-def session_login() -> Response:
+def session_login() -> str:
     """
-    login function for sessions
+    desc: login function for sessions
+        computes various responses based on user info provided
+    Return: logged user if credentials are correct
     """
     email = request.form.get("email")
     passwd = request.form.get("password")
@@ -48,9 +50,11 @@ def session_login() -> Response:
 
 @app_views.route("/auth_session/logout",
         strict_slashes=False, methods=["DELETE"])
-def session_logout() -> Response:
+def session_logout() -> str:
     """
-    deletes users current session
+    desc: deletes users current session
+        checks if user is in session and logs the user out
+    return: empty dictionary
     """
     from api.v1.app import auth
 
