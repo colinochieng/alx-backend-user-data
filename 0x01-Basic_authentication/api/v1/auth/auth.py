@@ -37,6 +37,14 @@ class Auth:
         ):
             return False
 
+        # matching pattern ending (*)
+        for route in excluded_paths:
+            if route.endswith('*'):
+                pattern = route.rstrip('*')
+
+                if path.startswith(pattern):
+                    return False
+
         if len(excluded_paths) == 0 or path not in excluded_paths:
             return True
 
