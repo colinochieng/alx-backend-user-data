@@ -3,7 +3,7 @@
 Basic auth's Module
 Uses base64 algorithms for basic authentications
 """
-from api.v1.auth.auth import Auth, TypeVar
+from api.v1.auth.auth import Auth
 import base64
 from models.user import User
 from models.base import DATA
@@ -73,7 +73,7 @@ class BasicAuth(Auth):
 
     def user_object_from_credentials(
         self, user_email: str, user_pwd: str
-    ) -> TypeVar("User"):
+    ) -> object:
         """
         desc: method that returns the User instance based
             on his email and password
@@ -108,7 +108,7 @@ class BasicAuth(Auth):
 
         return user
 
-    def current_user(self, request=None) -> TypeVar("User"):
+    def current_user(self, request=None) -> object:
         """
         retrives user based on flask-request authentification info
         """
