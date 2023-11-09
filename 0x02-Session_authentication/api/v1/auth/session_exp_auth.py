@@ -34,7 +34,7 @@ class SessionExpAuth(SessionAuth):
 
         return session_id
 
-    def user_id_for_session_id(self, session_id=None) -> None | str:
+    def user_id_for_session_id(self, session_id=None) -> str:
         """
         Overloads the base method
         desc: method to retrive user_id based on session id
@@ -54,7 +54,8 @@ class SessionExpAuth(SessionAuth):
             if created_at is None:
                 return None
 
-            expiration_time = created_at + timedelta(seconds=self.session_duration)
+            expiration_time = created_at + timedelta(
+                    seconds=self.session_duration)
             if datetime.now() > expiration_time:
                 return None
 

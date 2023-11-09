@@ -11,13 +11,13 @@ class SessionDBAuth(SessionExpAuth):
     Scheme for storing Session Data
     """
 
-    def create_session(self, user_id=None) -> None | str:
+    def create_session(self, user_id=None) -> str:
         """
         creates and stores new instance of UserSessio
         """
         session_id = super().create_session(user_id)
 
-        if session_id == None:
+        if session_id is None:
             return None
 
         user_session = UserSession(session_id=session_id, user_id=user_id)
@@ -26,7 +26,7 @@ class SessionDBAuth(SessionExpAuth):
 
         return session_id
 
-    def user_id_for_session_id(self, session_id=None) -> None | str:
+    def user_id_for_session_id(self, session_id=None) -> str:
         """
         returns the User ID by requesting UserSession
         in the database based on session_id
