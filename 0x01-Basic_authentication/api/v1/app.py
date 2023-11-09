@@ -7,7 +7,7 @@ from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request, Response
 from flask_cors import CORS, cross_origin
 import os
-from typing import Literal, Tuple
+from typing import Tuple
 
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ def not_found(error) -> str:
 
 
 @app.errorhandler(401)
-def unauthorized_err_handler(error) -> Tuple[Response, Literal[401]]:
+def unauthorized_err_handler(error) -> Tuple[Response, int]:
     """
     Error handler: Unauthorized
     User service unauthorized handler
@@ -44,7 +44,7 @@ def unauthorized_err_handler(error) -> Tuple[Response, Literal[401]]:
 
 
 @app.errorhandler(403)
-def forbidden_err_handler(error) -> Tuple[Response, Literal[403]]:
+def forbidden_err_handler(error) -> Tuple[Response, int]:
     """
     Error handler: Forbidden
     """
