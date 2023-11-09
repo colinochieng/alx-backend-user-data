@@ -32,7 +32,7 @@ class Auth:
 
         # targeting slash tolerance
         if (
-            path.removesuffix('/') in excluded_paths
+            path[0:-1] in excluded_paths
             or (path + '/') in excluded_paths
         ):
             return False
