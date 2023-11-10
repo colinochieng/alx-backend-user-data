@@ -4,6 +4,8 @@ Module fo string sessions
 """
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
+from datetime import datetime, timedelta
+from models.base import TIMESTAMP_FORMAT
 
 
 class SessionDBAuth(SessionExpAuth):
@@ -20,7 +22,14 @@ class SessionDBAuth(SessionExpAuth):
         if session_id is None:
             return None
 
-        user_session = UserSession(session_id=session_id, user_id=user_id)
+        created_at = self.user_id_by_session_id[session_id].get("created_at")
+
+        kwargs = {
+            "session_id": session_id,
+            "user_id": user_id,
+        }
+
+        user_session = UserSession(**kwargs)
 
         user_session.save()
 
@@ -46,7 +55,28 @@ class SessionDBAuth(SessionExpAuth):
 
         user_session = objs[0]
 
-        return user_session.to_json().get("user_id")
+        if self.session_duration > 0:
+            created_at = user_session.created_at
+
+            if created_at is None:
+                # destroy the session
+                print("removing one")
+                user_session.remove()
+                return None
+
+            expiration_time = created_at + timedelta(
+                seconds=self.session_duration)
+            print(created_at)
+            print(self.session_duration)
+
+            if datetime.utcnow() > expiration_time:
+                print(datetime.now(), expiration_time)
+                # destroy the session
+                user_session.remove()
+                print("removed two")
+                return None
+
+        return user_session.user_id
 
     def destroy_session(self, request=None) -> bool:
         """

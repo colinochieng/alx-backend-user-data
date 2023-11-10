@@ -9,7 +9,7 @@ class UserSession(Base):
     '''
     Scheme for storing user session data
     '''
-    def __init__(self, *args: list, **kwargs: dict):
+    def __init__(self, *args: list, **kwargs: dict) -> None:
         '''
         Intilaize Objects
         '''
