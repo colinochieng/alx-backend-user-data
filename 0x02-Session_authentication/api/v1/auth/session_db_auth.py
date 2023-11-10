@@ -60,20 +60,15 @@ class SessionDBAuth(SessionExpAuth):
 
             if created_at is None:
                 # destroy the session
-                print("removing one")
                 user_session.remove()
                 return None
 
             expiration_time = created_at + timedelta(
                 seconds=self.session_duration)
-            print(created_at)
-            print(self.session_duration)
 
             if datetime.utcnow() > expiration_time:
-                print(datetime.now(), expiration_time)
                 # destroy the session
                 user_session.remove()
-                print("removed two")
                 return None
 
         return user_session.user_id
