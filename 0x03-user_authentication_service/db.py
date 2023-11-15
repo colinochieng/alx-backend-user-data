@@ -64,9 +64,8 @@ class DB:
         user_data = User.__table__.columns.keys()
 
         for key in kwargs.keys():
-            if not key in user_data:
+            if key not in user_data:
                 raise InvalidRequestError
-
         try:
             return self._session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
