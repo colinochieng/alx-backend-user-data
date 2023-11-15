@@ -58,7 +58,7 @@ def log_in(email: str, password: str) -> str:
     assert response.json() == {"email": email, "message": "logged in"}
     assert 'session_id' in response.cookies.keys()
 
-    return response.cookies.get('session_id') 
+    return response.cookies.get('session_id')
 
 
 def profile_unlogged() -> None:
@@ -66,7 +66,7 @@ def profile_unlogged() -> None:
     desc: mocks login without valid session id
     '''
     cookies = {'session_id': 'Invalid session id'}
-    response = requests.post(f'{URL}profile', cookies=cookies)
+    response = requests.get(f'{URL}profile', cookies=cookies)
 
     assert response.status_code == 403
 
@@ -78,7 +78,7 @@ def profile_logged(session_id: str) -> None:
         session_id: session id to be used as cookie
     '''
     cookies = {'session_id': session_id}
-    response = requests.post(f'{URL}profile', cookies=cookies)
+    response = requests.get(f'{URL}profile', cookies=cookies)
 
     assert response.status_code == 200
     assert response.json() == {'email': "guillaume@holberton.io"}
@@ -106,11 +106,36 @@ def reset_password_token(email: str) -> str:
         email: user email
     return: reset password token
     '''
-    
+    data = {'email': email}
+    response = requests.post(f'{URL}reset_password', data=data)
+
+    assert response.status_code == 200
+
+    assert ['email', 'reset_token'] == list(response.json().keys())
+
+    return response.json().get('reset_token')
 
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
-    pass
+    '''
+    desc: function that mocks updating of user password
+    params:
+        email: logged in user email
+        reset_token: uuid string
+        new_password: new passcode
+    '''
+    data = {
+            'email': email,
+            'reset_token': reset_token,
+            'new_password': new_password
+        }
+
+    response = requests.put(f'{URL}reset_password', data=data)
+
+    assert response.status_code == 200
+    res_msg = {"email": email, "message": "Password updated"}
+    assert response.json() == res_msg
+
 
 EMAIL = "guillaume@holberton.io"
 PASSWD = "b4l0u"
@@ -128,4 +153,3 @@ if __name__ == "__main__":
     reset_token = reset_password_token(EMAIL)
     update_password(EMAIL, reset_token, NEW_PASSWD)
     log_in(EMAIL, NEW_PASSWD)
-

@@ -28,7 +28,6 @@ def users():
     email = request.form.get('email')
     password = request.form.get('password')
 
-
     try:
         AUTH.register_user(email, password)
 
@@ -37,8 +36,9 @@ def users():
                     {"email": email, "message": "user created"}
                     )
     except ValueError as e:
-        return jsonify({"message": "email already registered"}
-                    ), 400
+        res_data = {"message": "email already registered"}
+        return jsonify(res_data), 400
+
 
 @app.route('/sessions', strict_slashes=False, methods=['POST'])
 def login():
@@ -62,6 +62,7 @@ def login():
             abort(401)
     else:
         abort(401)
+
 
 @app.route('/sessions', strict_slashes=False, methods=['DELETE'])
 def logout():
@@ -128,7 +129,7 @@ def update_password():
     with fields "email", "reset_token" and "new_password"
     '''
     data = request.form.to_dict()
-    email = data.get('reset_token')
+    email = data.get('email')
     reset_token = data.get('reset_token')
     new_password = data.get('new_password')
 
@@ -143,7 +144,5 @@ def update_password():
         abort(403)
 
 
-
-
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port="5000")
+    app.run(host="0.0.0.0", port="5000")

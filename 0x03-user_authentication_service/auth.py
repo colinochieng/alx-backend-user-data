@@ -9,16 +9,16 @@ from user import User
 
 
 def _hash_password(passwd: str) -> bytes:
-        '''
-        desc: hashes user passcode using bcrypt
-        param:
-            passwd: user password
-        return: hashed_user password
-        '''
-        salt = bcrypt.gensalt()
-        passwd = passwd.encode('utf-8')
+    '''
+    desc: hashes user passcode using bcrypt
+    param:
+        passwd: user password
+    return: hashed_user password
+    '''
+    salt = bcrypt.gensalt()
+    passwd = passwd.encode('utf-8')
 
-        return bcrypt.hashpw(passwd, salt)
+    return bcrypt.hashpw(passwd, salt)
 
 
 def _generate_uuid() -> str:
@@ -51,8 +51,11 @@ class Auth:
             user = self._db.find_user_by(email=email)
             raise ValueError(f'User {email} already exists')
         except NoResultFound as e:
-            user = self._db.add_user(email=email,
-                    hash_passwd=_hash_password(passwd))
+            register_info = {
+                    'email': email,
+                    'hash_passwd': _hash_password(passwd)
+                    }
+            user = self._db.add_user(**register_info)
 
             return user
 
@@ -75,7 +78,7 @@ class Auth:
                 password = password.encode('utf-8')
 
                 return bcrypt.checkpw(password, user_pwd)
-                
+
         except NoResultFound as e:
             return False
 
@@ -108,7 +111,7 @@ class Auth:
         try:
             user = self._db.find_user_by(session_id=session_id)
             return user if user else None
-          
+
         except NoResultFound as e:
             None
 
@@ -130,7 +133,7 @@ class Auth:
         '''
         try:
             user = self._db.find_user_by(email=email)
-            
+
             if user:
                 token = {'reset_token': _generate_uuid()}
                 self._db.update_user(user.id, **token)
