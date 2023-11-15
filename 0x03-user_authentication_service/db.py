@@ -60,14 +60,17 @@ class DB:
         '''
         if not kwargs:
             raise InvalidRequestError
+
+        user_data = User.__table__.columns.keys()
+
+        for key in kwargs.keys():
+            if not key in user_data:
+                raise InvalidRequestError
+
         try:
             return self._session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
             raise NoResultFound
-        except InvalidRequestError:
-            raise InvalidRequestError
-        except Exception:
-            raise InvalidRequestError
 
     def update_user(self, user_id: int, **kwargs: Dict) -> None:
         '''
