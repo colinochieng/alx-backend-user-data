@@ -33,7 +33,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hash_passwd: str) -> User:
+    def add_user(self, email: str, hashed_passwordd: str) -> User:
         '''
         desc: function to add User to the db
         params:
@@ -42,12 +42,12 @@ class DB:
         Return: User object
         '''
         # create user
-        new_user = User(email=email, hashed_password=hash_passwd)
+        user = User(email=email, hashed_password=hashed_password)
 
-        self._session.add(new_user)
+        self._session.add(user)
         self._session.commit()
 
-        return new_user
+        return user
 
     def find_user_by(self, **kwargs: Dict) -> User:
         '''
@@ -58,6 +58,8 @@ class DB:
         Return: the first row found in the users table
             as filtered by the method’s input arguments
         '''
+        if not kwargs:
+            raise InvalidRequestError
         try:
             return self._session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
