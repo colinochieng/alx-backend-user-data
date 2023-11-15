@@ -66,11 +66,9 @@ class DB:
         for key in kwargs.keys():
             if key not in user_data:
                 raise InvalidRequestError
-        user = self._session.query(User).filter_by(**kwargs).first()
-        
-        if not user:
-            raise NoResultFound
-        return user
+
+        # raises NoResultFound if no user found
+        return self._session.query(User).filter_by(**kwargs).one()
 
     def update_user(self, user_id: int, **kwargs: Dict) -> None:
         '''
@@ -82,16 +80,13 @@ class DB:
         raise: ValueError If an argument that does not
             correspond to a user attribute is passed
         '''
-        try:
-            user = self.find_user_by(id=user_id)
+        user = self.find_user_by(id=user_id)
 
-            for key, value in kwargs.items():
-                if hasattr(User, key):
-                    if key != 'id':
-                        setattr(user, key, value)
-                else:
-                    msg = f'User has no attribute {key}'
-                    raise ValueError(msg)
-            self._session.commit()
-        except (NoResultFound, InvalidRequestError):
-            pass
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise ValueError
+
+        for key, value in kwargs.items():
+            if key != 'id':
+                setattr(user, key, value)
+        self._session.commit()
