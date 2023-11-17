@@ -108,11 +108,12 @@ class Auth:
             session_id: session id set as cookie
         return: User if session_id exists else None
         '''
+        if session_id is None:
+            return None
         try:
             user = self._db.find_user_by(session_id=session_id)
-            return user if user else None
-
-        except NoResultFound as e:
+            return user
+        except NoResultFound:
             None
 
     def destroy_session(self, user_id: int) -> None:
