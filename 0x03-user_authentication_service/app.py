@@ -128,7 +128,9 @@ def get_reset_password_token():
 def update_password():
     '''
     desc: function to update password
-    return: message
+    return:
+        - 200 and JSON Payload if all if well
+        - 403 for invalid tokens
     NOTE: request is expected to contain form data
     with fields "email", "reset_token" and "new_password"
     '''
