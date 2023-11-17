@@ -53,7 +53,7 @@ class Auth:
         except NoResultFound as e:
             register_info = {
                     'email': email,
-                    'hash_password': _hash_password(password)
+                    'hashed_password': _hash_password(password)
                     }
             user = self._db.add_user(**register_info)
 
