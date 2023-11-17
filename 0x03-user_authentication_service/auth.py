@@ -8,17 +8,17 @@ from db import DB
 from user import User
 
 
-def _hash_password(passwd: str) -> bytes:
+def _hash_password(password: str) -> bytes:
     '''
     desc: hashes user passcode using bcrypt
     param:
-        passwd: user password
+        password: user password
     return: hashed_user password
     '''
     salt = bcrypt.gensalt()
-    passwd = passwd.encode('utf-8')
+    password = password.encode('utf-8')
 
-    return bcrypt.hashpw(passwd, salt)
+    return bcrypt.hashpw(password, salt)
 
 
 def _generate_uuid() -> str:

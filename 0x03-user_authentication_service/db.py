@@ -4,11 +4,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 
-from typing import Dict
 from user import Base, User
 
 
@@ -25,7 +23,7 @@ class DB:
         self.__session = None
 
     @property
-    def _session(self) -> Session:
+    def _session(self):
         """Memoized session object
         """
         if self.__session is None:
@@ -49,7 +47,7 @@ class DB:
 
         return user
 
-    def find_user_by(self, **kwargs: Dict) -> User:
+    def find_user_by(self, **kwargs) -> User:
         '''
         desc: find user based on passed values
         param:
@@ -70,7 +68,7 @@ class DB:
         # raises NoResultFound if no user found
         return self._session.query(User).filter_by(**kwargs).one()
 
-    def update_user(self, user_id: int, **kwargs: Dict) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         '''
         desc: method to update user. Query the user using
             the id and uses the kwargs for updating
