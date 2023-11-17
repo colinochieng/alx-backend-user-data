@@ -38,13 +38,13 @@ class Auth:
     def __init__(self):
         self._db = DB()
 
-    def register_user(self, email: str, passwd: str) -> User:
+    def register_user(self, email: str, password: str) -> User:
         '''
         desc: function to register user, saves new
             user to the authentication database
         params:
             email: user mail
-            passwd: user password
+            password: user password
         '''
         # check if user already exist
         try:
@@ -53,7 +53,7 @@ class Auth:
         except NoResultFound as e:
             register_info = {
                     'email': email,
-                    'hash_passwd': _hash_password(passwd)
+                    'hash_password': _hash_password(password)
                     }
             user = self._db.add_user(**register_info)
 
